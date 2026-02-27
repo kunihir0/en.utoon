@@ -194,7 +194,7 @@ impl Source for UtoonSource {
                     }
                     
                     let title = a.text();
-                    let key = chapter_url.replace(BASE_URL, "").replace("/", "");
+                    let key = chapter_url.replace(BASE_URL, "").trim_matches('/').to_string();
                     
                     let mut chapter_number = num;
                     if let Some(ref t) = title {
@@ -244,12 +244,12 @@ impl Source for UtoonSource {
     }
 
     fn get_page_list(&self, _manga: Manga, chapter: Chapter) -> Result<Vec<Page>> {
-        let url = format!("{}/{}/", BASE_URL, chapter.key);
+        let url = chapter.url.unwrap_or_else(|| format!("{}/{}/", BASE_URL, chapter.key));
         let html = Request::get(&url)?.html()?;
         
         let mut pages = Vec::new();
         
-        for item in html.select(".reading-content img").into_iter().flatten() {
+        for item in html.select(".reading-content img, .page-break img.wp-manga-chapter-img").into_iter().flatten() {
             let mut img_url = item.attr("data-src").unwrap_or_default();
             if img_url.is_empty() {
                 img_url = item.attr("data-lazy-src").unwrap_or_default();
