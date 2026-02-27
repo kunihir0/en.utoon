@@ -1,0 +1,12 @@
+{
+	"info": {
+		"id": "en.enutoon",
+		"name": "UToon",
+		"version": 1,
+		"url": "https://utoon.net/",
+		"contentRating": 0,
+		"languages": [
+			"en"
+		]
+	}
+}
