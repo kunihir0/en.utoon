@@ -54,7 +54,7 @@ fn parse_manga_list(html: Document) -> Result<MangaPageResult> {
 
 impl Source for UtoonSource {
     fn new() -> Self {
-        set_rate_limit(10, 1, TimeUnit::Seconds);
+        set_rate_limit(2, 1, TimeUnit::Seconds);
         Self
     }
 
@@ -194,6 +194,7 @@ impl Source for UtoonSource {
                     }
                     
                     let title = a.text();
+                    let locked = item.attr("class").unwrap_or_default().contains("premium");
                     let key = chapter_url.replace(BASE_URL, "").trim_matches('/').to_string();
                     
                     let mut chapter_number = num;
@@ -232,6 +233,7 @@ impl Source for UtoonSource {
                         title,
                         url: Some(chapter_url),
                         chapter_number: Some(chapter_number),
+                        locked,
                         ..Default::default()
                     });
                     num -= 1.0;
